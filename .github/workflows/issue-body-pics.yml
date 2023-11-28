@@ -29,10 +29,10 @@ jobs:
       run: |
         if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
           echo "This workflow was manually triggered with issue number ${{ github.event.inputs.issueNumber }}"
-          echo "::set-output name=issueNumber::${{ github.event.inputs.issueNumber }}"
+          echo "issueNumber=${{ github.event.inputs.issueNumber }}" >> $GITHUB_OUTPUT
         else
           echo "This workflow was triggered by issue ${{ github.event.issue.number }}"
-          echo "::set-output name=issueNumber::${{ github.event.issue.number }}"
+          echo "issueNumber=${{ github.event.issue.number }}" >> $GITHUB_OUTPUT
         fi
       shell: bash 
 
