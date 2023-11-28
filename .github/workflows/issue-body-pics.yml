@@ -51,7 +51,8 @@ jobs:
       id: get-issue-title-picture
       run: |
         curl -H "Authorization: ${{ secrets.PEXELS_KEY }}" \
-          --data-urlencode "query=${{ steps.get-issue-title.outputs.issueTitle }}"
+          --get \
+          --data-urlencode "query=${{ steps.get-issue-title.outputs.issueTitle }}" \
           "https://api.pexels.com/v1/search?per_page=1" | jq -r '.photos[0].src.original' > url
         cat url
         
