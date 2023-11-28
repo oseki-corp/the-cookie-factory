@@ -1,0 +1,40 @@
+name: add pics to issue from title
+
+on: 
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+    inputs:
+      issueNumber:
+        description: 'Issue numbre to update'
+        required: true
+        type: number
+        
+  # This workflow is also triggered on issue creation.
+  issues:
+    types: [opened]
+
+jobs:
+  update-issue-description:
+    permissions:
+      issues: write
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Get issue number
+      id: get-issue-number
+      run: |
+        if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+          echo "This workflow was manually triggered with issue number ${{ github.event.inputs.issueNumber }}"
+          echo "::set-output name=issueNumber::${{ github.event.inputs.issueNumber }}"
+        else
+          echo "This workflow was triggered by issue ${{ github.event.issue.number }}"
+          echo "::set-output name=issueNumber::${{ github.event.issue.number }}"
+        fi
+      shell: bash 
+
+    - name: Update issue picture in body
+      run: cat '![madeleines](https://images.pexels.com/photos/5194490/pexels-photo-5194490.jpeg)' | \
+           gh issue edit "${{ steps.get-issue-number.outputs.issueNumber }}" --body-file -
