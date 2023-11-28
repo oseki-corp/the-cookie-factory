@@ -48,7 +48,7 @@ jobs:
       run: |
         echo -n "issueTitlePicture=" >> $GITHUB_OUTPUT
         curl -H "Authorization: ${{ secrets.PEXELS_KEY }}" \
-          "https://api.pexels.com/v1/search?query=${{ steps.get-issue-title.outputs.issueTitle }}&per_page=1" | jq -r '.photos[0].src.original') >> $GITHUB_OUTPUT
+          "https://api.pexels.com/v1/search?query=${{ steps.get-issue-title.outputs.issueTitle }}&per_page=1" | jq -r '.photos[0].src.original' >> $GITHUB_OUTPUT
 
     - name: Update issue picture in body
       run: |
