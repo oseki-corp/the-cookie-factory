@@ -55,5 +55,5 @@ jobs:
 
     - name: Update issue picture in body
       run: |
-        echo "![${{ steps.get-issue-title.outputs.issueTitle }}](${{ steps.get-issue-title.outputs.issueTitlePicture }})" | \
+        echo "![${{ steps.get-issue-title.outputs.issueTitle }}](${{ steps.get-issue-title-picture.outputs.issueTitlePicture }})" | \
         gh issue edit "${{ steps.get-issue-number.outputs.issueNumber }}" --body-file -
