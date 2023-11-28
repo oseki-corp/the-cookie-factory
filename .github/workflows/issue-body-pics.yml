@@ -40,3 +40,5 @@ jobs:
       run: |
         cat '![madeleines](https://images.pexels.com/photos/5194490/pexels-photo-5194490.jpeg)' | \
         gh issue edit "${{ steps.get-issue-number.outputs.issueNumber }}" --body-file -
+      env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
