@@ -34,11 +34,17 @@ jobs:
           echo "This workflow was triggered by issue ${{ github.event.issue.number }}"
           echo "issueNumber=${{ github.event.issue.number }}" >> $GITHUB_OUTPUT
         fi
-      shell: bash 
+      shell: bash
+      
+    - name: Get issue number
+      id: get-issue-title
+      run: |
+        echo "issueTitle=$(gh issue view --json title -t '{{.title}}' ${{ steps.get-issue-number.outputs.issueNumber }})" >> $GITHUB_OUTPUT
+      shell: bash
 
     - name: Update issue picture in body
       run: |
-        echo '![madeleines](https://images.pexels.com/photos/5194490/pexels-photo-5194490.jpeg)' | \
+        echo "\![$steps.get-issue-title.outputs.issueTitle](https://images.pexels.com/photos/5194490/pexels-photo-5194490.jpeg)" | \
         gh issue edit "${{ steps.get-issue-number.outputs.issueNumber }}" --body-file -
       env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
