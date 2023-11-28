@@ -11,7 +11,7 @@ on:
         
   # This workflow is also triggered on issue creation.
   issues:
-    types: [opened]
+    types: [opened, edited]
 
 jobs:
   update-issue-description:
@@ -24,6 +24,10 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
+    - name: Detect title changes
+      if: ${{ github.event.changes.title }} == ''
+      run: exit 0
+
     - name: Checkout code
       uses: actions/checkout@v4
 
