@@ -37,5 +37,6 @@ jobs:
       shell: bash 
 
     - name: Update issue picture in body
-      run: cat '![madeleines](https://images.pexels.com/photos/5194490/pexels-photo-5194490.jpeg)' | \
-           gh issue edit "${{ steps.get-issue-number.outputs.issueNumber }}" --body-file -
+      run: |
+        cat '![madeleines](https://images.pexels.com/photos/5194490/pexels-photo-5194490.jpeg)' | \
+        gh issue edit "${{ steps.get-issue-number.outputs.issueNumber }}" --body-file -
