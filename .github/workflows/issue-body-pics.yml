@@ -57,7 +57,7 @@ jobs:
           --url 'https://food-recipes-with-images.p.rapidapi.com/" | jq -r '.d[0]' > recipe
         
         echo -n "issueTitlePicture=https:" >> $GITHUB_OUTPUT
-        jq -r '.Image' >> $GITHUB_OUTPUT
+        jq -r '.Image' recipe >> $GITHUB_OUTPUT
 
     - name: Update issue picture in body
       run: |
