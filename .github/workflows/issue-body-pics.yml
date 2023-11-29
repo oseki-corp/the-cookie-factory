@@ -62,5 +62,10 @@ jobs:
 
     - name: Update issue picture in body
       run: |
-        echo "![${{ steps.get-issue-title.outputs.issueTitle }}](${{ steps.get-issue-recipe.outputs.issueTitlePicture }})" | \
-        gh issue edit "${{ steps.get-issue-number.outputs.issueNumber }}" --body-file -
+        echo "![${{ steps.get-issue-title.outputs.issueTitle }}](${{ steps.get-issue-recipe.outputs.issueTitlePicture }})" > issue-body.md
+        echo "# ${{ steps.get-issue-title.outputs.issueTitle }}' recipe >> issue-body.md
+        echo "## Ingredients' recipe >> issue-body.md
+        jq '.d[0].Ingredients | values[] |= "- [ ] " + . | values[]' recipe >> issue-body.md
+        echo "## Instructions' recipe >> issue-body.md
+        jq '.d[0].Instructions' recipe >> issue-body.md
+        gh issue edit "${{ steps.get-issue-number.outputs.issueNumber }}" --body-file issue-body.md
