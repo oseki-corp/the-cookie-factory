@@ -71,9 +71,13 @@ jobs:
           ### Ingredients
           $(jq -r '.d[0].Ingredients | values[] |= "- [ ] " + . | values[]' recipe)
           \`\`\`
-          ### Instructions
           
-          $(jq -r '.d[0].Instructions' recipe)
+          ### Instructions
+
+          \`\`\`[tasklist]
+          ### Instructions
+          $(jq -r '.d[0].Instructions' recipe | awk '{print "- [] " $0}')
+          \`\`\`
         EOF
 
         cat issue-body.md
