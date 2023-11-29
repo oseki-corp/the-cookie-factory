@@ -48,18 +48,18 @@ jobs:
         echo "issueTitle=$(gh issue view --json title -t '{{.title}}' ${{ steps.get-issue-number.outputs.issueNumber }} )" >> $GITHUB_OUTPUT
 
     - name: Get issue picture
-      id: get-issue-title-picture
+      id: get-issue-recipe
       run: |
-        curl -H "Authorization: ${{ secrets.PEXELS_KEY }}" \
+        curl --header "X-RapidAPI-Host: food-recipes-with-images.p.rapidapi.com" \
+          --header "X-RapidAPI-Key: ${{ secrets.FOOD_RECIPES_KEY }}" \
           --get \
-          --data-urlencode "query=${{ steps.get-issue-title.outputs.issueTitle }}" \
-          "https://api.pexels.com/v1/search?per_page=1" | jq -r '.photos[0].src.original' > url
-        cat url
+          --data-urlencode "q=${{ steps.get-issue-title.outputs.issueTitle }}" \
+          --url 'https://food-recipes-with-images.p.rapidapi.com/" | jq -r '.d[0]' > recipe
         
-        echo -n "issueTitlePicture=" >> $GITHUB_OUTPUT
-        cat url >> $GITHUB_OUTPUT
+        echo -n "issueTitlePicture=https:" >> $GITHUB_OUTPUT
+        jq -r '.Image' >> $GITHUB_OUTPUT
 
     - name: Update issue picture in body
       run: |
-        echo "![${{ steps.get-issue-title.outputs.issueTitle }}](${{ steps.get-issue-title-picture.outputs.issueTitlePicture }})" | \
+        echo "![${{ steps.get-issue-title.outputs.issueTitle }}](${{ steps.get-issue-recipe.outputs.issueTitlePicture }})" | \
         gh issue edit "${{ steps.get-issue-number.outputs.issueNumber }}" --body-file -
