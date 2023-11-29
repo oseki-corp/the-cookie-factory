@@ -54,7 +54,7 @@ jobs:
           --header "X-RapidAPI-Key: ${{ secrets.FOOD_RECIPES_KEY }}" \
           --get \
           --data-urlencode "q=${{ steps.get-issue-title.outputs.issueTitle }}" \
-          --url 'https://food-recipes-with-images.p.rapidapi.com/" | jq -r '.d[0]' > recipe
+          --url "https://food-recipes-with-images.p.rapidapi.com/" | jq -r '.d[0]' > recipe
         
         echo -n "issueTitlePicture=https:" >> $GITHUB_OUTPUT
         jq -r '.Image' recipe >> $GITHUB_OUTPUT
