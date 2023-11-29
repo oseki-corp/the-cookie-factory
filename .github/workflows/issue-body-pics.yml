@@ -50,15 +50,15 @@ jobs:
     - name: Get issue picture
       id: get-issue-recipe
       run: |
-        curl --header "X-RapidAPI-Host: food-recipes-with-images.p.rapidapi.com" \
+        curl -v --header "X-RapidAPI-Host: food-recipes-with-images.p.rapidapi.com" \
           --header "X-RapidAPI-Key: ${{ secrets.FOOD_RECIPES_KEY }}" \
           --get \
           --data-urlencode "q=${{ steps.get-issue-title.outputs.issueTitle }}" \
-          --url "https://food-recipes-with-images.p.rapidapi.com/" | jq -r '.d[0]' > recipe
+          --url "https://food-recipes-with-images.p.rapidapi.com/" | jq -r '.' > recipe
 
-        jq '.' recipe
+        cat recipe
         echo -n "issueTitlePicture=https:" >> $GITHUB_OUTPUT
-        jq -r '.Image' recipe >> $GITHUB_OUTPUT
+        jq -r '.d[0].Image' recipe >> $GITHUB_OUTPUT
 
     - name: Update issue picture in body
       run: |
