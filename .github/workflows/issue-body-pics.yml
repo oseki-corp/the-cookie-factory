@@ -66,6 +66,7 @@ jobs:
         echo "# ${{ steps.get-issue-title.outputs.issueTitle }}" >> issue-body.md
         echo "## Ingredients" >> issue-body.md
         jq -r '.d[0].Ingredients | values[] |= "- [ ] " + . | values[]' recipe >> issue-body.md
-        echo "## Instructions" >> issue-body.md
+        echo "```[tasklist]\n### Instructions" >> issue-body.md
         jq -r '.d[0].Instructions' recipe >> issue-body.md
+        echo "```" >> issue-body.md
         gh issue edit "${{ steps.get-issue-number.outputs.issueNumber }}" --body-file issue-body.md
