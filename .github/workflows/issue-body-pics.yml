@@ -67,10 +67,10 @@ jobs:
           
           # ${{ steps.get-issue-title.outputs.issueTitle }}
           
-          ```[tasklist]
+          \`\`\`[tasklist]
           ### Ingredients
           $(jq -r '.d[0].Ingredients | values[] |= "- [ ] " + . | values[]' recipe)
-          ```
+          \`\`\`
           ### Instructions
           
           $(jq -r '.d[0].Instructions' recipe)
