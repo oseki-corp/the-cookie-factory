@@ -73,11 +73,9 @@ jobs:
           \`\`\`
           
           ### Instructions
-
-          \`\`\`[tasklist]
-          ### Instructions
+          
           $(jq -r '.d[0].Instructions' recipe | awk '{print "- [ ] " $0}')
-          \`\`\`
+
         EOF
 
         cat issue-body.md
