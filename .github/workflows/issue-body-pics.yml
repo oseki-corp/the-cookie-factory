@@ -84,4 +84,4 @@ jobs:
         
         gh issue edit "${{ steps.get-issue-number.outputs.issueNumber }}" \
           --body-file issue-body.md
-          --milestone ${{ variables.MILESTONE }}
+          --milestone ${{ MILESTONE }}
