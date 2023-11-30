@@ -107,8 +107,6 @@ jobs:
         github-token: ${{ secrets.PROJECT_KEY }}
         item-id: ${{ steps.get-item-id.outputs.project-item-id }}
         field-keys: Progress,Baking session,Diet,Priority,Kids friendly,
+        # Empty, Baking session 1,None,No
         field-values: >
-          db51cdbf, # Empty
-          [1], # Baking session 1
-          ff4b2ae0, # None
-          c858c894 # No
+          db51cdbf,[1],ff4b2ae0,c858c894
