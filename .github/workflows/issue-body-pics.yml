@@ -86,4 +86,14 @@ jobs:
           $(jq -r '.d[0].Ingredients' recipe | grep -qwi 'milk' && echo "--add-label Milk? ") \
           $(jq -r '.d[0].Ingredients' recipe | grep -qwi 'nut' && echo "--add-label Nuts? ") \
           --milestone "${{ vars.MILESTONE }}" \
-          --body-file issue-body.md 
+          --body-file issue-body.md
+
+    - uses: monry/actions-get-project-item-id@v2
+      id: get-item-id
+      with:
+        # Personal Access Token that with `repo` and `org:read` are granted.
+        github-token: ${{ secrets.PROJECT_KEY }}
+        project-id: ${{ vars.PROJECT_ID }}
+        issue-id: ${{ github.event.issue.node_id }}
+
+    - run: echo "${{ steps.get-item-id.outputs.issue-id}}"
