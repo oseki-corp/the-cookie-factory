@@ -82,7 +82,6 @@ jobs:
         
         gh issue edit "${{ steps.get-issue-number.outputs.issueNumber }}" \
           $(jq -r '.d[0].Ingredients' recipe | grep -qwi 'eggs' && echo "--add-label 'Eggs?' ") \
-          $(jq -r '.d[0].Ingredients' recipe | grep -qwi 'flour' && echo "--add-label 'Gluten?' ") \
           $(jq -r '.d[0].Ingredients' recipe | grep -qwi 'milk' && echo "--add-label 'Milk?' ") \
           $(jq -r '.d[0].Ingredients' recipe | grep -qwi 'nut' && echo "--add-label 'Nuts?' ") \
           --milestone "${{ vars.MILESTONE }}" \
