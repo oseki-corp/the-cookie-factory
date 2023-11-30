@@ -99,7 +99,7 @@ jobs:
     - uses: titoportas/update-project-fields@v0.1.0
       with:
         project-url: ${{ vars.PROJECT_URL }}
-        github-token: ${{ secrets.PROJECT_TOKEN }}
+        github-token: ${{ secrets.PROJECT_KEY }}
         item-id: ${{ steps.get-item-id.outputs.project-item-id }}
         field-keys: Progress,Baking session,Diet,Priority,Kids friendly,
         field-values: >
