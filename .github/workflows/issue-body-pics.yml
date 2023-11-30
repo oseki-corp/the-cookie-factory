@@ -82,4 +82,6 @@ jobs:
 
         cat issue-body.md
         
-        gh issue edit "${{ steps.get-issue-number.outputs.issueNumber }}" --body-file issue-body.md
+        gh issue edit "${{ steps.get-issue-number.outputs.issueNumber }}" \
+          --body-file issue-body.md
+          --milestone ${{ variables.MILESTONE }}
