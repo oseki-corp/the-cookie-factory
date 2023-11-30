@@ -96,6 +96,8 @@ jobs:
         project-id: ${{ vars.PROJECT_ID }}
         issue-id: ${{ github.event.issue.node_id }}
 
+    - run: echo "node id: ${{ github.event.issue.node_id }} item id: ${{ steps.get-item-id.outputs.project-item-id }}"
+
     - uses: titoportas/update-project-fields@v0.1.0
       with:
         project-url: ${{ vars.PROJECT_URL }}
