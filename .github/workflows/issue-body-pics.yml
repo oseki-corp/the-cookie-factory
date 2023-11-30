@@ -81,9 +81,9 @@ jobs:
         cat issue-body.md
         
         gh issue edit "${{ steps.get-issue-number.outputs.issueNumber }}" \
-          $(jq -r '.d[0].Ingredients' recipe | grep -wi 'eggs' && echo '--add-label "eggs 🥚 ?"') \
-          $(jq -r '.d[0].Ingredients' recipe | grep -wi 'flour' && echo '--add-label "Gluten 🌾 ?"') \
-          $(jq -r '.d[0].Ingredients' recipe | grep -wi 'milk' && echo '--add-label "Milk 🥛 ?"') \
-          $(jq -r '.d[0].Ingredients' recipe | grep -wi 'nut' && echo '--add-label "Nuts 🥜 ?"') \
+          $(jq -r '.d[0].Ingredients' recipe | grep -wi 'eggs' && echo "--add-label 'Eggs 🥚 ?'") \
+          $(jq -r '.d[0].Ingredients' recipe | grep -wi 'flour' && echo "--add-label 'Gluten 🌾 ?'") \
+          $(jq -r '.d[0].Ingredients' recipe | grep -wi 'milk' && echo "--add-label 'Milk 🥛 ?'") \
+          $(jq -r '.d[0].Ingredients' recipe | grep -wi 'nut' && echo "--add-label 'Nuts 🥜 ?'") \
           --milestone "${{ vars.MILESTONE }}" \
           --body-file issue-body.md 
