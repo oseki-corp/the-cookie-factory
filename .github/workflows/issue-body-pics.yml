@@ -96,4 +96,14 @@ jobs:
         project-id: ${{ vars.PROJECT_ID }}
         issue-id: ${{ github.event.issue.node_id }}
 
-    - run: echo "${{ steps.get-item-id.outputs.issue-id}}"
+    - uses: titoportas/update-project-fields@v0.1.0
+      with:
+        project-url: ${{ vars.PROJECT_URL }}
+        github-token: ${{ secrets.PROJECT_TOKEN }}
+        item-id: ${{ steps.get-item-id.outputs.project-item-id }}
+        field-keys: Progress,Baking session,Diet,Priority,Kids friendly,
+        field-values: >
+          db51cdbf, # Empty
+          [1], # Baking session 1
+          ff4b2ae0, # None
+          c858c894 # No
