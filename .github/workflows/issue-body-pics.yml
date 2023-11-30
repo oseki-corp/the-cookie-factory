@@ -93,11 +93,12 @@ jobs:
       with:
         # Personal Access Token that with `repo` and `org:read` are granted.
         github-token: ${{ secrets.PROJECT_KEY }}
-        project-id: ${{ vars.PROJECT_ID }}
-        issue-id: ${{ github.event.issue.node_id }}
+        project-owner: ${{ vars.PROJECT_OWNER }}
+        project-number: ${{ vars.PROJECT_IDENTIFIER }}
+        issue-repository: ${{ github.repository }}
+        issue-number: ${{ steps.get-issue-number.outputs.issueNumber }}
 
     - run: |
-        echo ${{ github.event.issue.node_id }}
         echo ${{ steps.get-item-id.outputs.project-item-id }}
 
     - uses: titoportas/update-project-fields@v0.1.0
