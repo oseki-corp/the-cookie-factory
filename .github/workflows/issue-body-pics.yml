@@ -91,15 +91,10 @@ jobs:
     - uses: monry/actions-get-project-item-id@v2
       id: get-item-id
       with:
-        # Personal Access Token that with `repo` and `org:read` are granted.
+        # Personal Access Token that with `repo`, `projects` and `org:read` are granted.
         github-token: ${{ secrets.PROJECT_KEY }}
-        project-owner: ${{ vars.PROJECT_OWNER }}
-        project-number: ${{ vars.PROJECT_IDENTIFIER }}
-        issue-repository: ${{ github.repository }}
-        issue-number: ${{ steps.get-issue-number.outputs.issueNumber }}
-
-    - run: |
-        echo ${{ steps.get-item-id.outputs.project-item-id }}
+        project-id: ${{ vars.PROJECT_ID }}
+        issue-id: ${{ github.event.issue.node_id }}
 
     - uses: titoportas/update-project-fields@v0.1.0
       with:
