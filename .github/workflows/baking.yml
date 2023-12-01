@@ -1,0 +1,98 @@
+name: Baking cookies - Simulation
+
+on:
+  issues:
+    types: [labeled]
+    
+jobs:
+  baking-cookies:
+    runs-on: ubuntu-latest
+
+    permissions:
+        contents: read
+        issues: write
+
+    env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+    if: ${{ github.event.label.name == 'Baking' }}
+
+    steps:
+        - uses: actions/checkout@v4
+
+        - name: Get issue number
+          id: get-issue-number
+          run: |
+            if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+                echo "This workflow was manually triggered with issue number ${{ github.event.inputs.issueNumber }}"
+                echo "issueNumber=${{ github.event.inputs.issueNumber }}" >> $GITHUB_OUTPUT
+            else
+                echo "This workflow was triggered by issue ${{ github.event.issue.number }}"
+                echo "issueNumber=${{ github.event.issue.number }}" >> $GITHUB_OUTPUT
+            fi
+
+        - uses: monry/actions-get-project-item-id@v2
+          id: get-item-id
+          with:
+              # Personal Access Token that with `repo`, `projects` and `org:read` are granted.
+              github-token: ${{ secrets.PROJECT_KEY }}
+              project-id: ${{ vars.PROJECT_ID }}
+              issue-id: ${{ github.event.issue.node_id }}
+      
+        - uses: titoportas/update-project-fields@v0.1.0
+          name: Baking 🔵⚪️⚪️⚪️⚪️
+          with:
+              project-url: ${{ vars.PROJECT_URL }}
+              github-token: ${{ secrets.PROJECT_KEY }}
+              item-id: ${{ steps.get-item-id.outputs.project-item-id }}
+              field-keys: Progress
+              # 🔵⚪️⚪️⚪️⚪️
+              field-values: >
+                cd8ab760
+
+        - uses: titoportas/update-project-fields@v0.1.0
+          name: Baking 🔵🔵⚪️⚪️⚪️
+          with:
+              project-url: ${{ vars.PROJECT_URL }}
+              github-token: ${{ secrets.PROJECT_KEY }}
+              item-id: ${{ steps.get-item-id.outputs.project-item-id }}
+              field-keys: Progress
+              # 🔵🔵⚪️⚪️⚪️
+              field-values: >
+                ccba7a07
+
+        - uses: titoportas/update-project-fields@v0.1.0
+          name: Baking 🔵🔵🔵⚪️⚪️
+          with:
+              project-url: ${{ vars.PROJECT_URL }}
+              github-token: ${{ secrets.PROJECT_KEY }}
+              item-id: ${{ steps.get-item-id.outputs.project-item-id }}
+              field-keys: Progress
+              # 🔵🔵🔵⚪️⚪️
+              field-values: >
+                293677f1
+
+        - uses: titoportas/update-project-fields@v0.1.0
+          name: Baking 🔵🔵🔵🔵⚪️
+          with:
+              project-url: ${{ vars.PROJECT_URL }}
+              github-token: ${{ secrets.PROJECT_KEY }}
+              item-id: ${{ steps.get-item-id.outputs.project-item-id }}
+              field-keys: Progress
+              # 🔵🔵🔵🔵⚪️
+              field-values: >
+                a2258a8c
+
+        - uses: titoportas/update-project-fields@v0.1.0
+          name: Baking 🍪🍪🍪🍪🍪
+          with:
+              project-url: ${{ vars.PROJECT_URL }}
+              github-token: ${{ secrets.PROJECT_KEY }}
+              item-id: ${{ steps.get-item-id.outputs.project-item-id }}
+              field-keys: Progress
+              # 🍪🍪🍪🍪🍪
+              field-values: >
+                aaed8b4c
+                
+        - uses: peter-evans/close-issue@v2
+          name: Close Issue
