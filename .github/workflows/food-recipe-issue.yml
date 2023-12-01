@@ -1,0 +1,122 @@
+name: Fetch recipe from issue title
+
+on: 
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+    inputs:
+      issueNumber:
+        description: 'Issue number to update'
+        required: true
+        type: number
+        
+  # This workflow is also triggered on issue creation.
+  issues:
+    types: [opened, edited]
+
+jobs:
+  update-issue-description:
+
+    # This workflow only needs read access to the repo and write access to the issues
+    permissions:
+      contents: read
+      issues: write
+
+    runs-on: ubuntu-latest
+
+    # Some actions GITHUB_TOKEN as environment variable
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+    # Some actions GITHUB_TOKEN as environment variable
+    - name: Detect title changes
+      
+      # Exit early if the title is unchanged, the recipe will be updated only on issue title change
+      if: ${{ github.event.changes.title }} == ''
+      run: exit 0
+
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Get issue number
+      id: get-issue-number
+      run: |
+        if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+          echo "This workflow was manually triggered with issue number ${{ github.event.inputs.issueNumber }}"
+          echo "issueNumber=${{ github.event.inputs.issueNumber }}" >> $GITHUB_OUTPUT
+        else
+          echo "This workflow was triggered by issue ${{ github.event.issue.number }}"
+          echo "issueNumber=${{ github.event.issue.number }}" >> $GITHUB_OUTPUT
+        fi
+      
+    - name: Get issue title
+      id: get-issue-title
+      run: |
+        echo "issueTitle=$(gh issue view --json title -t '{{.title}}' ${{ steps.get-issue-number.outputs.issueNumber }} )" >> $GITHUB_OUTPUT
+
+    # Search for the recipe on the Food Recipes with images API. The issue title is used as query
+    - name: Get issue picture
+      id: get-issue-recipe
+      run: |
+        curl -v --header "X-RapidAPI-Host: food-recipes-with-images.p.rapidapi.com" \
+          --header "X-RapidAPI-Key: ${{ secrets.FOOD_RECIPES_KEY }}" \
+          --get \
+          --data-urlencode "q=${{ steps.get-issue-title.outputs.issueTitle }}" \
+          --url "https://food-recipes-with-images.p.rapidapi.com/" | jq -r '.' > recipe
+
+        cat recipe
+        echo -n "issueTitlePicture=https:" >> $GITHUB_OUTPUT
+        jq -r '.d[0].Image' recipe >> $GITHUB_OUTPUT
+
+    - name: Update issue picture in body
+      run: |
+        cat << EOF > issue-body.md
+          ![${{ steps.get-issue-title.outputs.issueTitle }}](${{ steps.get-issue-recipe.outputs.issueTitlePicture }})"
+          
+          # ${{ steps.get-issue-title.outputs.issueTitle }}
+          
+          \`\`\`[tasklist]
+          ### Ingredients
+          $(jq -r '.d[0].Ingredients | values[] |= "- [ ] " + . | values[]' recipe)
+          \`\`\`
+          
+          ### Instructions
+          
+          $(jq -r '.d[0].Instructions' recipe | awk '{print "- [ ] " $0}')
+
+        EOF
+
+        cat issue-body.md
+        
+        gh issue edit "${{ steps.get-issue-number.outputs.issueNumber }}" \
+          --milestone "${{ vars.MILESTONE }}" \
+          --body-file issue-body.md
+
+    # Issue labeler used to find hints of food intolerences
+    - uses: github/issue-labeler@v3.3
+      with:
+        configuration-path: .github/labeler.yml
+        sync-labels: 1
+        enable-versioned-regex: 0
+        repo-token: ${{ github.token }}
+
+    # The issue is automatically added to the project so we can directly query its project id
+    - uses: monry/actions-get-project-item-id@v2
+      id: get-item-id
+      with:
+        # Personal Access Token that with `repo`, `projects` and `org:read` are granted.
+        github-token: ${{ secrets.PROJECT_KEY }}
+        project-id: ${{ vars.PROJECT_ID }}
+        issue-id: ${{ github.event.issue.node_id }}
+
+    # Initialize the project fields with the default values
+    - uses: titoportas/update-project-fields@v0.1.0
+      with:
+        project-url: ${{ vars.PROJECT_URL }}
+        github-token: ${{ secrets.PROJECT_KEY }}
+        item-id: ${{ steps.get-item-id.outputs.project-item-id }}
+        field-keys: Progress,Baking session,Diet,Priority,Kids friendly,
+        # ProjectV2SingleSelectField values for the fields above
+        # Empty, Baking session 1,None,No
+        field-values: >
+          db51cdbf,[1],ff4b2ae0,c858c894
