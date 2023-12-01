@@ -1,0 +1,11 @@
+Eggs?:
+  - '(eggs|egg|yolk|yolks)'
+
+Gluten?:
+  - '(wheat|flour)'
+
+Milk?:
+  - '(milk|cream|butter|cheese)'
+
+Nuts?:
+  - '(nuts|nut|peanut|peanuts|almond|almonds|cashew|cashews|pecan|pecans|walnut|walnuts)'
