@@ -81,12 +81,15 @@ jobs:
         cat issue-body.md
         
         gh issue edit "${{ steps.get-issue-number.outputs.issueNumber }}" \
-          $(jq -r '.d[0].Ingredients' recipe | grep -qwi 'eggs' && echo "--add-label Eggs? ") \
-          $(jq -r '.d[0].Ingredients' recipe | grep -qwi 'flour' && echo "--add-label Gluten? ") \
-          $(jq -r '.d[0].Ingredients' recipe | grep -qwi 'milk' && echo "--add-label Milk? ") \
-          $(jq -r '.d[0].Ingredients' recipe | grep -qwi 'nut' && echo "--add-label Nuts? ") \
           --milestone "${{ vars.MILESTONE }}" \
           --body-file issue-body.md
+
+    - uses: github/issue-labeler@v3.3 #May not be the latest version
+      with:
+        configuration-path: .github/labeler.yml
+        not-before: 2020-01-15T02:54:32Z
+        enable-versioned-regex: 0
+        repo-token: ${{ github.token }}
 
     - uses: monry/actions-get-project-item-id@v2
       id: get-item-id
